@@ -4,6 +4,7 @@
 # R Code written by Karl A. Lamothe - karl.lamothe@dfo-mpo.gc.ca
 # Great Lakes Laboratory for Fisheries and Aquatic Sciences
 # The data were collected under Fisheries and Oceans Canada permitting 
+# Edited 2021-07-26  R Version: 4.0.4
 ################################################################################
 ################################################################################
 # load libraries
@@ -867,7 +868,8 @@ Residuals.proc<-as.data.frame(cbind(SS=residuals(Haul3pro),
                                               rep("black",17),"red",
                                               rep("black",5),"red","red",
                                               "black","red",
-                                              rep("black",5))))
+                                              rep("black",5)),
+                                    Year = c(rep("2016",21),rep("2011",22))))
 
 head(Residuals.proc)
 str(Residuals.proc)
@@ -884,9 +886,12 @@ Residplotgg<-ggplot(Residuals.proc)+
   geom_hline(yintercept=0.11386099  ,linetype="dashed",col="black")+
   geom_col(aes(y=SS, x=Site, fill=Sitecol), width = 0.5)+
   scale_fill_manual(values=c("black","red"))+
+  geom_vline(xintercept=21.5, color = "black")+
   scale_y_continuous(limits=c(0,0.2), labels=function(x){sprintf("%.2f", x)})+
   ylab("Residual deviance")+
   coord_flip()+
+  annotate("text",x=20, y=0.175, label="2016")+
+  annotate("text",x=23.5, y=0.175, label="2011")+
   theme_me+
   theme(legend.position = "none")
 Residplotgg
