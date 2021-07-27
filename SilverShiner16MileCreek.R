@@ -43,19 +43,19 @@ colnames(community)
 
 # include only adult SS 
 ad.SS.comm<-community
-ad.SS.comm<-ad.SS.comm[-c(33,34)]
+ad.SS.comm<-ad.SS.comm[-c(31,32)]
 
 # include only juvenile SS
 juv.SS.comm<-community
-juv.SS.comm<-juv.SS.comm[-c(32,34)]
+juv.SS.comm<-juv.SS.comm[-c(30,32)]
 
 # adult and juvenile SS as unique 'species' (i.e. df column) 
 ad.juve.comm<-community
-ad.juve.comm<-ad.juve.comm[-34]
+ad.juve.comm<-ad.juve.comm[-32]
 
 # full comm no separation of juveniles and adults
 full.comm<-community
-full.comm<-full.comm[-c(32,33)]
+full.comm<-full.comm[-c(30,31)]
 
 ################################################################################
 # load habitat data
@@ -477,7 +477,7 @@ Figure3 # patchwork makes this really easy to do!
 ################################################################################
 ################################################################################
 # Make Data frames
-Fish.counts2<-as.data.frame(t(aggregate(full.comm[3:32],
+Fish.counts2<-as.data.frame(t(aggregate(full.comm[3:30],
                                      by=list(Habitat$Year),sum)))
 head(Fish.counts2)
 Fish.counts2<-as.data.frame(Fish.counts2[-1,]) #remove top row
@@ -488,8 +488,8 @@ Fish.countsgg<-cbind.data.frame(Species = c(rownames(Fish.counts2),
                                             rownames(Fish.counts2)),
                                    Count = c(Fish.counts2$`2011`, 
                                              Fish.counts2$`2016`),
-                                   Year = c(rep("2011",30),
-                                            rep("2016",30)))
+                                   Year = c(rep("2011",28),
+                                            rep("2016",28)))
 head(Fish.countsgg)
 
 # replace period with a space in the species names
@@ -513,9 +513,8 @@ Relative<-c(Relative2011,Relative2016)
 Fish.countsgg<-cbind(Fish.countsgg, Relative)
 
 # Only take the most prevalent species
-Fish.countsgg.red<-Fish.countsgg[c(1,5,6,8,10,14,15,16,19,21,30,25,
-                                   28,29,31,35,36,38,40,44,45,46,
-                                   49,51,60,55,58,59),]
+Fish.countsgg.red<-Fish.countsgg[c(1,3,4,6,8,12,13,14,17,19,23,26,27,28,
+                                   29,31,32,34,36,40,41,42,45,47,51,54,55,56),]
 
 # Plot
 FigureS2<-ggplot(Fish.countsgg.red, aes(reorder(Species, Relative), 
@@ -548,10 +547,10 @@ FigureS2
 head(ad.SS.comm)
 
 # relative abundance per row
-ad.SS.comm.trans<-decostand(ad.SS.comm[3:32], method = "total")
-juv.SS.comm.trans<-decostand(juv.SS.comm[3:32], method = "total")
-ad.juve.comm.trans<-decostand(ad.juve.comm[3:33], method = "total")
-total.comm.trans<-decostand(full.comm[3:32], method = "total")
+ad.SS.comm.trans<-decostand(ad.SS.comm[3:30], method = "total")
+juv.SS.comm.trans<-decostand(juv.SS.comm[3:30], method = "total")
+ad.juve.comm.trans<-decostand(ad.juve.comm[3:31], method = "total")
+total.comm.trans<-decostand(full.comm[3:30], method = "total")
 
 #choose variables for RDA
 head(Habitat)
@@ -615,8 +614,8 @@ var.score$variables <- c("WV","Cobble","Depth","Submerged")
 
 # Only plotting the most abundant species for visualization purposes
 rownames(vscores)
-colSums(ad.juve.comm[3:33])
-vscores2 <- vscores[c(1,5,6,8,10,14,15,16,19,21,25,28,29,30,31),]
+colSums(ad.juve.comm[3:31])
+vscores2 <- vscores[c(1,3,4,6,8,12,13,14,17,19,23,26,27,28,29),]
 rownames(vscores2)<-c("RoBa","WhSu","BrSt","RaDa", "JoDa", "StSh","CoSh",
                       "SMB","RiCh","RoSh","FaMi","LoDa","CrCh","SSa","SSj")
 
@@ -687,8 +686,8 @@ var.score.1$variables <- c("Depth","Cobble","WV","Submerged")
 
 # Only plotting the most abundant species for visualization purposes
 rownames(vscores.1)
-colSums(full.comm[3:32])
-vscores2.1 <- vscores.1[c(1,5,6,8,10,14,15,16,19,21,25,28,29,30),]
+colSums(full.comm[3:30])
+vscores2.1 <- vscores.1[c(1,3,4,6,8,12,13,14,17,19,23,26,27,28),]
 rownames(vscores2.1)<-c("RoBa","WhSu","BrSt","RaDa", "JoDa", "StSh","CoSh",
                       "SMB","RiCh","RoSh","FaMi","LoDa","CrCh","SS")
 
@@ -736,9 +735,9 @@ Hauls12<-read.xlsx("SilverShiner16MileCreek.xlsx", sheet = "Haul1+2")
 Hauls3<-read.xlsx("SilverShiner16MileCreek.xlsx",  sheet = "Haul1+2+3")
 colnames(Hauls12)
 
-Hauls1  <- Hauls1[3:34] #only include species
-Hauls12 <- Hauls12[3:34]
-Hauls3  <- Hauls3[3:34]
+Hauls1  <- Hauls1[3:32] #only include species
+Hauls12 <- Hauls12[3:32]
+Hauls3  <- Hauls3[3:32]
 
 # Haul 1 remove columns with zero individuals caught
 i <- (colSums(Hauls1, na.rm=T) != 0)
