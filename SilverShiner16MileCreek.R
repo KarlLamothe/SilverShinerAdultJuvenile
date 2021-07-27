@@ -41,10 +41,6 @@ theme_me <- theme_bw() +
 community<-read.xlsx("SilverShiner16MileCreek.xlsx",sheet = "Haul1+2+3")
 colnames(community) 
 
-#Notropis photogenis is combined Adult and Juvenile Silver Shiner
-#SS.Adult = Adult Silver Shiner
-#SS.Juvenile = Juvenile Silver Shiner
-
 # include only adult SS 
 ad.SS.comm<-community
 ad.SS.comm<-ad.SS.comm[-c(33,34)]
@@ -522,7 +518,7 @@ Fish.countsgg.red<-Fish.countsgg[c(1,5,6,8,10,14,15,16,19,21,30,25,
                                    49,51,60,55,58,59),]
 
 # Plot
-g1<-ggplot(Fish.countsgg.red, aes(reorder(Species, Relative), 
+FigureS2<-ggplot(Fish.countsgg.red, aes(reorder(Species, Relative), 
                               fill=Year, Relative))+ 
   geom_bar(stat="identity", position="dodge")+
   ylab("Proportion of annual catch") + 
@@ -539,8 +535,8 @@ g1<-ggplot(Fish.countsgg.red, aes(reorder(Species, Relative),
         legend.background = element_blank())
 
 # Export figure
-#tiff("Figure3.tiff", width = 6, height = 3, units = 'in', res = 1000)
-g1
+#tiff("FigurS2.tiff", width = 6, height = 3, units = 'in', res = 1000)
+FigureS2
 #dev.off()
 
 ################################################################################
@@ -566,7 +562,7 @@ str(Habitat.RDA)
 cor_mat <- cor(Habitat.RDA, method='pearson')
 
 # Generate and export correlation plot
-#tiff("Corrplot.tiff", width = 7, height = 7, units = 'in', res = 1000)
+#tiff("Figure S1.tiff", width = 7, height = 7, units = 'in', res = 1000)
 corrplot(cor_mat,  method = "ellipse", type = "upper",order = "alphabet", 
          tl.pos='d', tl.cex=0.8, addCoefasPercent=F, tl.col="black")
 corrplot(cor_mat, add = TRUE, type = "lower", method = "number", diag = FALSE, 
@@ -722,8 +718,9 @@ ggRDA2 <- ggplot(scores.1, aes(x = RDA1, y = RDA2)) +
 ggRDA2
 
 # Export the figure
-#png("Figure5.png", width = 5, height = 8, units = 'in', res = 500)
-#tiff("Figure5.tiff", width = 5, height = 8, units = 'in', res = 1000)
+# Using the patchwork package to align the two ggRDAs
+#png("Figure4.png", width = 5, height = 8, units = 'in', res = 500)
+#tiff("Figure4.tiff", width = 5, height = 8, units = 'in', res = 1000)
 ggRDA / ggRDA2+
   plot_annotation(tag_levels = "A")
 #dev.off()
@@ -819,30 +816,31 @@ protest(X = Hauls3.PCA, Y = Hauls1.PCA, scores="sites", permutations=9999)
 Haul3pro <- procrustes(X = Hauls3.PCA, Y = Hauls1.PCA, 
                        symmetric = TRUE, scale = FALSE)
 residuals(Haul3pro)
+order(residuals(Haul3pro))
 
 # procrustes plot
 Haul3pro1.df<-cbind.data.frame(Haul3pro$X)
 Haul3pro2.df<-cbind.data.frame(Haul3pro$Yrot)
 colnames(Haul3pro2.df)<-c( "PC1","PC2")
 Haul3progg.df<-rbind.data.frame(Haul3pro1.df,Haul3pro2.df)
-Haul3progg.df<-cbind(Haul3progg.df, Site=rep(seq(1:43),2), 
-                     ordination = c(rep("Ord3",43),rep("Ord1",43)),
-                     Outliers=c(rep("black",10),"red",
-                                rep("black",17),"red",
-                                rep("black",5),"red","red",
-                                "black","red",
-                                rep("black",15),"red",rep("black",17),"red",
-                                rep("black",5),"red","red",
-                                "black","red",rep("black",5)))
-
+Haul3progg.df<-cbind(Haul3progg.df, 
+                     Site=rep(seq(1:43),2), 
+                     ordination = c(rep("Ord3",43),
+                                    rep("Ord1",43)),
+                     Outliers=c(rep("black",7),"red",
+                                rep("black",5),"red","red","black","red",
+                                rep("black",15),"red",
+                                rep("black",17),"red",rep("black",5),"red",
+                                "red","black","red",rep("black",15),"red",
+                                rep("black",10)))
 
 #ggplot
-# Include sites 36, 29, 35, 11, 38
-Haul3progg.df[Haul3progg.df$Site=="36",]
-Haul3progg.df[Haul3progg.df$Site=="29",]
-Haul3progg.df[Haul3progg.df$Site=="35",]
-Haul3progg.df[Haul3progg.df$Site=="11",]
-Haul3progg.df[Haul3progg.df$Site=="38",]
+# Include sites 13, 8, 14, 33, 17
+Haul3progg.df[Haul3progg.df$Site=="15",]
+Haul3progg.df[Haul3progg.df$Site=="8",]
+Haul3progg.df[Haul3progg.df$Site=="14",]
+Haul3progg.df[Haul3progg.df$Site=="33",]
+Haul3progg.df[Haul3progg.df$Site=="17",]
 
 Procrustesgg<-ggplot(Haul3progg.df)+
   geom_hline(yintercept=0,linetype="dashed",col="black")+
@@ -852,11 +850,11 @@ Procrustesgg<-ggplot(Haul3progg.df)+
   geom_point(aes(x=PC1, y=PC2, fill=ordination), shape=21)+
   scale_fill_manual(values=c("black","gray"))+
   theme_me+ 
-  annotate("text",x=0.022,y=0.17,label="36")+
-  annotate("text",x=0.18,y=-0.08,label="29")+
-  annotate("text",x=0.075,y=-0.12,label="35")+
-  annotate("text",x=-0.067,y=0.015,label="11")+
-  annotate("text",x=0.143,y=-0.07,label="38")+
+  annotate("text",x=0.03,y=-0.07,label="15")+
+  annotate("text",x=-0.175,y=0.08,label="8")+
+  annotate("text",x=-0.115,y=0.14,label="14")+
+  annotate("text",x=-0.14,y=0.070,label="33")+
+  annotate("text",x=0.05,y=-0.035,label="17")+
   xlab("Dimension 1")+ylab("Dimension 2")+
   theme(legend.position = "none")
 Procrustesgg
@@ -869,7 +867,7 @@ Residuals.proc<-as.data.frame(cbind(SS=residuals(Haul3pro),
                                               rep("black",5),"red","red",
                                               "black","red",
                                               rep("black",5)),
-                                    Year = c(rep("2016",21),rep("2011",22))))
+                                    Year = c(rep("2011",22),rep("2016",21))))
 
 head(Residuals.proc)
 str(Residuals.proc)
@@ -886,12 +884,12 @@ Residplotgg<-ggplot(Residuals.proc)+
   geom_hline(yintercept=0.11386099  ,linetype="dashed",col="black")+
   geom_col(aes(y=SS, x=Site, fill=Sitecol), width = 0.5)+
   scale_fill_manual(values=c("black","red"))+
-  geom_vline(xintercept=21.5, color = "black")+
+  geom_vline(xintercept=22.5, color = "black")+
   scale_y_continuous(limits=c(0,0.2), labels=function(x){sprintf("%.2f", x)})+
   ylab("Residual deviance")+
   coord_flip()+
-  annotate("text",x=20, y=0.175, label="2016")+
-  annotate("text",x=23.5, y=0.175, label="2011")+
+  annotate("text",x=21, y=0.175, label="2011")+
+  annotate("text",x=24, y=0.175, label="2016")+
   theme_me+
   theme(legend.position = "none")
 Residplotgg
@@ -900,7 +898,7 @@ Residplotgg
 Figure4<-Procrustesgg+Residplotgg+
   plot_annotation(tag_levels = 'A')+
   plot_layout(widths = c(2, 1))
-Figure4 # I think that looks pretty slick
+Figure4 
 
 # Export
 #png("Figure4.png", width = 7.5, height = 4, units = 'in', res = 500)
