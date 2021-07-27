@@ -850,6 +850,7 @@ Procrustesgg<-ggplot(Haul3progg.df)+
   geom_point(aes(x=PC1, y=PC2, fill=ordination), shape=21)+
   scale_fill_manual(values=c("black","gray"))+
   theme_me+ 
+  coord_fixed()+
   annotate("text",x=0.03,y=-0.07,label="15")+
   annotate("text",x=-0.175,y=0.08,label="8")+
   annotate("text",x=-0.115,y=0.14,label="14")+
@@ -862,12 +863,10 @@ Procrustesgg
 # residuals plot
 Residuals.proc<-as.data.frame(cbind(SS=residuals(Haul3pro),
                                     Site=seq(1:43),
-                                    Sitecol=c(rep("black",10),"red",
-                                              rep("black",17),"red",
-                                              rep("black",5),"red","red",
-                                              "black","red",
-                                              rep("black",5)),
-                                    Year = c(rep("2011",22),rep("2016",21))))
+                                    Sitecol=c(rep("black",7),"red",
+                                               rep("black",5),"red","red","black","red",
+                                               rep("black",15),"red",
+                                               rep("black",10))))
 
 head(Residuals.proc)
 str(Residuals.proc)
