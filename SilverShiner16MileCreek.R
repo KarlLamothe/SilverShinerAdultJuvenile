@@ -569,26 +569,16 @@ corrplot(cor_mat, add = TRUE, type = "lower", method = "number", diag = FALSE,
 #dev.off()
 
 ################################################################################
+# Run the model for adults and juveniles separated
 ################################################################################
-# Stepwise model selection for juveniles
-################################################################################
-################################################################################
-set.seed(4256)
-mod0<-rda(ad.juve.comm.trans ~ 1, Habitat.RDA[1:6]) # intercept
-mod1<-rda(ad.juve.comm.trans ~ ., Habitat.RDA[1:6])
-rda_select.r <-ordistep(mod0, scope = formula(mod1), direction = "both", 
-                        Pin = 0.15, Pout = 0.15, perm.max = 9999)
-
-# rda.fin final model
 rda.fin <-rda(ad.juve.comm.trans ~ WV + Cobble + Depth + Submerged, 
               data = Habitat.RDA)
 summary(rda.fin)
 
-vif.cca(rda.fin) #variable inflation factor looks good
+vif.cca(rda.fin) #variable inflation factor
 
 # Calculate adjusted R2 of RDA
-R2adj <- RsquareAdj(rda.fin)$adj.r.squared
-R2adj 
+RsquareAdj(rda.fin)$adj.r.squared
 
 # Proportion of variance explained per component
 rda.fin$CCA$eig/sum(rda.fin$CCA$eig)
@@ -596,12 +586,7 @@ rda.fin$CCA$eig/sum(rda.fin$CCA$eig)
 # screeplot
 screeplot(rda.fin)
 
-# variable coefficients
-coef(rda.fin)
-
-################################################################################
-# Triplot
-################################################################################
+###################################### Triplot #################################
 # site scores
 scores <- data.frame(Habitat.RDA,rda.fin$CCA$u)
 
@@ -645,13 +630,8 @@ ggRDA <- ggplot(scores, aes(x = RDA1, y = RDA2)) +
 ggRDA
 
 ################################################################################
-set.seed(4256)
-mod0.1<-rda(total.comm.trans ~ 1, Habitat.RDA[1:6])
-mod1.1<-rda(total.comm.trans ~ ., Habitat.RDA[1:6])
-rda_select.r.1 <-ordistep(mod0.1, scope = formula(mod1.1), direction = "both", 
-                        Pin = 0.15, Pout = 0.15, perm.max = 9999)
-
-# rda.fin final model
+# Run the model for adults and juveniles combined
+################################################################################
 rda.fin.1 <-rda(total.comm.trans ~ Depth + Cobble + WV + Submerged, 
                 data = Habitat.RDA)
 summary(rda.fin.1)
@@ -659,8 +639,7 @@ summary(rda.fin.1)
 vif.cca(rda.fin.1) #variable inflation factor looks good
 
 # Calculate adjusted R2 of RDA
-R2adj.1 <- RsquareAdj(rda.fin.1)$adj.r.squared
-R2adj.1 
+RsquareAdj(rda.fin.1)$adj.r.squared
 
 # Proportion of variance explained per component
 rda.fin.1$CCA$eig/sum(rda.fin.1$CCA$eig)
@@ -671,9 +650,7 @@ screeplot(rda.fin.1)
 # variable coefficients
 coef(rda.fin.1)
 
-################################################################################
-# Triplot
-################################################################################
+###################################### Triplot #################################
 # site scores
 scores.1 <- data.frame(Habitat.RDA,rda.fin.1$CCA$u)
 
